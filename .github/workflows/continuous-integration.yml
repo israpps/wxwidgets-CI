@@ -32,7 +32,7 @@ jobs:
             os: windows-2019
             cxx: msvc
             cmake_generator: ""
-            extra_arg: "-A Win32"
+            extra_arg: "-DCMAKE_GENERATOR_PLATFORM=x86"
 
     steps:
       - uses: actions/checkout@v2
