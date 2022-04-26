@@ -44,7 +44,7 @@ jobs:
       - name: Cache CMake dependency source code
         uses: actions/cache@v2
         env:
-          cache-name: cache-cmake-dependency-sources
+          cache-name: cache--cmake-dependency-sources
         with:
           # CMake cache is at ${{github.workspace}}/build/_deps but we only will cache folders ending in '-src' to cache source code
           path: ${{github.workspace}}/build/_deps/*-src
@@ -58,7 +58,7 @@ jobs:
       - name: Cache CMake dependency build objects
         uses: actions/cache@v2
         env:
-          cache-name: cache-cmake-dependency-builds
+          cache-name: cache--cmake-dependency-builds
         with:
           # CMake cache is at ${{github.workspace}}/build/_deps but we only care about the folders ending in -build or -subbuild
           path: |
