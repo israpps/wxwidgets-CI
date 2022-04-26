@@ -96,6 +96,10 @@ jobs:
         # Execute the build.  You can specify a specific target with "--target <NAME>"
         run: cmake --build . -j5 --config $BUILD_TYPE 
 
+      - name: list repo
+        run: |
+            ls -R
+
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
