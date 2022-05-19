@@ -4,7 +4,7 @@
 
 
 MyFrame::MyFrame()
-	: wxFrame(NULL, wxID_ANY, "Hello World")
+	: wxFrame(NULL, wxID_ANY, "Hello World"), m_locale(locale)
 {
 	wxMenu *menuFile = new wxMenu;
 	menuFile->Append(FID::Hello, "&Hello...\tCtrl-H",

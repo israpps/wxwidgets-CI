@@ -9,16 +9,21 @@
 #endif
 
 #include <wx/string.h>
+#include <wx/utils.h> 
 
 class MyFrame : public wxFrame
 {
 public:
-	MyFrame();
-
+	MyFrame(wxWindow* parent, wxLocale& locale, long Custom_Styles = 0, wxWindowID id = -1);
+	
 private:
 	void OnHello(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
+	
+public: //vars
+	unsigned long flags;
+    wxLocale& m_locale;
 };
 
 enum FID

@@ -8,6 +8,7 @@ on:
 jobs:
   build-release:
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.docker }}
     env:
       BUILD_TYPE: Release
     strategy:
@@ -18,13 +19,19 @@ jobs:
           - platform_name: linux
             os: ubuntu-20.04
             cxx: g++-10
+            cmake_generator: "Unix Makefiles"
+            docker: ""
           - platform_name: macos
             os: macos-10.15
             cxx: clang++
+            cmake_generator: "Unix Makefiles"
+            docker: ""
           # NOTE: CXX seems to be ignored on Windows, but specify it anyway for consistency
           - platform_name: windows
-            os: windows-2019
-            cxx: msvc
+            os: ubuntu-20.04
+            cxx: "g++"
+            cmake_generator: ""
+            docker: "dockcross/windows-static-x86:latest"
 
     steps:
       - uses: actions/checkout@v2
@@ -52,6 +59,10 @@ jobs:
         shell: bash
         # Use CMake to "install" build artifacts (only interested in CMake registered targets) to our custom artifacts directory
         run: cmake --install . --config $BUILD_TYPE
+        
+      - name: list repo
+        run: |
+            ls -R
 
       - name: Upload
         uses: actions/upload-artifact@v2
