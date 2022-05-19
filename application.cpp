@@ -26,11 +26,9 @@ bool MyApp::OnInit()
     const wxLanguageInfo* pInfo = wxLocale::GetLanguageInfo(m_lang);
     if (!m_locale.AddCatalog("HDLBinst"))///add program specific catalog
     {
-        COLOR(0c)
         std::cout << wxString::Format(_("Couldn't find/load the 'HDLBinst' catalog for locale '%s'.\nThe translation file must be placed here: \"Lang\\%s\\HDLBinst.mo\"\n"),
                    pInfo ? pInfo->GetLocaleName() : _("unknown"),
                    m_locale.GetCanonicalName());
-        COLOR(07)
     }
     if (!m_locale.AddCatalog("wxstd"))///add wxwidgets standard catalog
         std::cerr << "can't find wxstd.mo\n";
