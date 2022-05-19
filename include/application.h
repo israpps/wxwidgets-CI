@@ -10,7 +10,6 @@ class MyApp : public wxApp
 {
 public:
     MyApp() {m_lang = wxLANGUAGE_UNKNOWN;}
-    ~MyApp();
 	virtual bool OnInit();
 protected:
 	wxLanguage m_lang;  // language specified by user
