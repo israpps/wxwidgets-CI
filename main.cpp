@@ -3,8 +3,8 @@
 #include "main.h"
 
 
-MyFrame::MyFrame()
-	: wxFrame(NULL, wxID_ANY, "Hello World"), m_locale(locale)
+MyFrame::MyFrame(wxWindow* parent, wxLocale& locale, unsigned long FLG, wxWindowID id)
+	: wxFrame(parent, id, "Hello World"), m_locale(locale), flags(FLG)
 {
 	wxMenu *menuFile = new wxMenu;
 	menuFile->Append(FID::Hello, "&Hello...\tCtrl-H",

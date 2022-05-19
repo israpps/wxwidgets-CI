@@ -14,7 +14,7 @@
 class MyFrame : public wxFrame
 {
 public:
-	MyFrame(wxWindow* parent, wxLocale& locale, long Custom_Styles = 0, wxWindowID id = -1);
+	MyFrame(wxWindow* parent, wxLocale& locale, unsigned long FLG = 0, wxWindowID id = wxID_ANY);
 	
 private:
 	void OnHello(wxCommandEvent& event);
