@@ -9,7 +9,10 @@
 #endif
 
 #include <wx/string.h>
-#include <wx/utils.h> 
+#include <wx/utils.h> //Locale data and MISC stuff
+#include <wx/fileconf.h> //handling config files
+
+#include "translate.h" // tables, enumerators and alias for locale ID 
 
 class MyFrame : public wxFrame
 {
