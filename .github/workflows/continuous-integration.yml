@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Linux Dependencies
-        if: runner.os == 'Linux'
+        if: runner.platform_name == 'Linux'
         run: sudo apt-get install --assume-yes libgtk-3-dev libglew-dev
 
       - name: Cache CMake dependency source code
@@ -66,11 +66,11 @@ jobs:
             ${{github.workspace}}/build/_deps/*-build
             ${{github.workspace}}/build/_deps/*-subbuild
           # Cache hash is dependent on CMakeLists files anywhere as these can change what's in the cache, as well as cmake modules files
-          key: ${{ env.cache-name }}--${{ matrix.os }}-${{ matrix.cxx }}-${{ hashFiles('**/CMakeLists.txt', 'cmake/**') }}
+          key: ${{ env.cache-name }}--${{ matrix.platform_name }}-${{ matrix.cxx }}-${{ hashFiles('**/CMakeLists.txt', 'cmake/**') }}
           # it's acceptable to reuse caches for different CMakeLists content if exact match is not available
           # as long as the OS and Compiler match exactly
           restore-keys: |
-            ${{ env.cache-name }}-${{ matrix.os }}-${{ matrix.cxx }}-
+            ${{ env.cache-name }}-${{ matrix.platform_name }}-${{ matrix.cxx }}-
 
       # when building on master branch and not a pull request, build and test in release mode (optimised build)
       # - name: Set Build Mode to Release
