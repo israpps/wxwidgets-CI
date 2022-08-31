@@ -26,17 +26,6 @@ jobs:
           git --no-pager log Latest..HEAD --pretty=format:"- %h  %<(18)%an: %s">>CHANGELOG.MD
           cat CHANGELOG.MD
 
-      - name: Deploy pre-release
-        uses: softprops/action-gh-release@v1
-        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
-        with:
-          body_path: CHANGELOG.MD
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          fail_on_unmatched_files: false
-          name: "Latest build"
-          tag_name: "latest"
-          prerelease: true
-
       - name: delete previous tag/release
         if: github.ref == 'refs/heads/master'
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
@@ -45,6 +34,17 @@ jobs:
           tag_name: "latest"
         env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy pre-release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/master'
+        with:
+          body_path: CHANGELOG.MD
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          fail_on_unmatched_files: false
+          name: "Latest build"
+          tag_name: "latest"
+          prerelease: true
 
   continuous-integration:
     runs-on: ${{ matrix.os }}
@@ -154,7 +154,7 @@ jobs:
 
       - name: Deploy pre-release
         uses: softprops/action-gh-release@v1
-        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+        if: github.ref == 'refs/heads/master'
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           fail_on_unmatched_files: true
