@@ -8,8 +8,41 @@ on:
     types: [opened, synchronize]
 
 jobs:
+
+  clean_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: delete previous tag/release
+        if: github.ref == 'refs/heads/master'
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: "latest"
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create changelog
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "https://img.shields.io/github/downloads/${{ github.repository }}/Latest/total">CHANGELOG.MD
+          echo Latest changes:>>CHANGELOG.MD
+          git --no-pager log Latest..HEAD --pretty=format:"- %h  %<(18)%an: %s">>CHANGELOG.MD
+          cat CHANGELOG.MD
+
+      - name: Deploy pre-release
+        uses: softprops/action-gh-release@v1
+        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+        with:
+          body_path: CHANGELOG.MD
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          fail_on_unmatched_files: false
+          name: "Latest build"
+          tag_name: "latest"
+          prerelease: true
+
   continuous-integration:
     runs-on: ${{ matrix.os }}
+    needs: [clean_release]
     container: ${{ matrix.docker }}
     env:
       BUILD_TYPE: Release
@@ -23,17 +56,26 @@ jobs:
             cxx: g++-10
             cmake_generator: "Unix Makefiles"
             docker: ""
+            executable_name: "${{ github.event.repository.name }}"
           - platform_name: macos
             os: macos-10.15
             cxx: clang++
             cmake_generator: "Unix Makefiles"
             docker: ""
+            executable_name: "${{ github.event.repository.name }}"
           # NOTE: CXX seems to be ignored on Windows, but specify it anyway for consistency
           - platform_name: windows
             os: ubuntu-20.04
             cxx: "g++"
             cmake_generator: ""
             docker: "dockcross/windows-static-x86:latest"
+            executable_name: "${{ github.event.repository.name }}.exe"
+          - platform_name: windowsx64
+            os: ubuntu-20.04
+            cxx: "g++"
+            cmake_generator: ""
+            docker: "dockcross/windows-static-x64:latest"
+            executable_name: "${{ github.event.repository.name }}.exe"
 
     steps:
       - uses: actions/checkout@v2
@@ -100,8 +142,24 @@ jobs:
         run: |
             ls -R
 
+      - name: repack
+        run: |
+            7z a -t7z ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z build/${{ matrix.executable_name }}
+
+      - name: Deploy pre-release
+        uses: softprops/action-gh-release@v1
+        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          fail_on_unmatched_files: true
+          files: |
+              ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z
+          name: "Latest build"
+          tag_name: "latest"
+          prerelease: true
+
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: wx-widgets-test_build_${{ github.run_number }}_${{ matrix.platform_name }}
-          path: ${{github.workspace}}/build/demo*
+          name: ${{ github.event.repository.name }}-build_${{ github.run_number }}-${{ matrix.platform_name }}
+          path: ${{github.workspace}}/build/${{ matrix.executable_name }}
