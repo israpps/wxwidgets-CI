@@ -50,6 +50,8 @@ jobs:
         with:
           generateReleaseNotes: true
           commit: ${{ github.sha }}
+          tag: ${{ env.RELEASE_TAG }}
+          name: ${{ env.RELEASE_TAG }} Release
           token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
 
