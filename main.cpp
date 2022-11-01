@@ -71,8 +71,22 @@ void MyFrame::OnExit(wxCommandEvent& event)
  
 void MyFrame::OnAbout(wxCommandEvent& event)
 {
-    wxMessageBox("This is a wxWidgets Hello World example",
-                 "About Hello World", wxOK | wxICON_INFORMATION);
+    wxString wxbuild(wxVERSION_STRING);
+
+#if defined(__WXMSW__)
+    wxbuild << _T("-Windows");
+#elif defined(__UNIX__)
+    wxbuild << _T("-Linux");
+#endif
+
+#if wxUSE_UNICODE
+    wxbuild << _T("-Unicode build");
+#else
+    wxbuild << _T("-ANSI build");
+#endif // wxUSE_UNICODE
+    wxbuild << _T("\n\nMore information about this sample and how it was built here:\nhttps://github.com/israpps/wxwidgets-CI");
+
+    wxMessageBox(wxbuild, "Build information", wxOK | wxICON_INFORMATION);
 }
  
 void MyFrame::OnHello(wxCommandEvent& event)
