@@ -29,27 +29,9 @@ jobs:
           git --no-pager log $COMPARISON --pretty=format:"- %h %<(18)%an: %s">>CHANGELOG.MD
           cat CHANGELOG.MD
 
-      - name: delete previous tag/pre-release
-        if: github.ref == 'refs/heads/master'
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        with:
-          delete_release: true
-          tag_name: "latest"
-        env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Process release tag
         if: startsWith(github.ref, 'refs/tags/v')
         run: echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - name: delete previous tag release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        with:
-          delete_release: true
-          tag_name: ${{ env.RELEASE_TAG }}
-        env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: post pre-release
         uses: ncipollo/release-action@v1.11.1
@@ -190,7 +172,7 @@ jobs:
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           artifactErrorsFailBuild: true
-          tag_name: "latest"
+          tag: "latest"
           prerelease: true
           draft: false
           artifacts: |
