@@ -180,20 +180,32 @@ jobs:
         run: |
             7z a -t7z ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z build/${{ matrix.executable_name }}
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.event.repository.name }}-build_${{ github.run_number }}-${{ matrix.platform_name }}
+          path: ${{github.workspace}}/build/${{ matrix.executable_name }}
+
       - name: Deploy pre-release
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           fail_on_unmatched_files: true
+          tag_name: "latest"
+          prerelease: true
+          draft: false
           files: |
               ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z
-          tag_name: "latest"
-          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-          draft: false
 
-      - name: Upload
-        uses: actions/upload-artifact@v2
+      - name: Deploy release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
         with:
-          name: ${{ github.event.repository.name }}-build_${{ github.run_number }}-${{ matrix.platform_name }}
-          path: ${{github.workspace}}/build/${{ matrix.executable_name }}
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          fail_on_unmatched_files: true
+          prerelease: false
+          draft: false
+          files: |
+              ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z
+
