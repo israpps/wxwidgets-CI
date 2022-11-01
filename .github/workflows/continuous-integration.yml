@@ -52,7 +52,7 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy pre-release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@latest
         if: github.ref == 'refs/heads/master'
         with:
           body_path: CHANGELOG.MD
@@ -63,7 +63,7 @@ jobs:
           prerelease: true
 
       - name: Deploy pre-release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@latest
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           generate_release_notes: true
@@ -187,7 +187,7 @@ jobs:
           path: ${{github.workspace}}/build/${{ matrix.executable_name }}
 
       - name: Deploy pre-release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@latest
         if: github.ref == 'refs/heads/master'
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
@@ -199,7 +199,7 @@ jobs:
               ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z
 
       - name: Deploy release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@latest
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
