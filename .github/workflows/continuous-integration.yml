@@ -3,9 +3,12 @@ name: continuous-integration
 on:
   push:
     tags:
-      - v**
+      - 'v*'
     branches:
-      - master
+      - 'master'
+    paths-ignore:
+      - '**.MD'
+
   pull_request:
     types: [opened, synchronize]
 
@@ -31,7 +34,9 @@ jobs:
 
       - name: Process release tag
         if: startsWith(github.ref, 'refs/tags/v')
-        run: echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        run: |
+          echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo "RELEASE_TAG is $RELEASE_TAG or ${{ env.RELEASE_TAG }}"
 
       - name: delete previous tag/pre-release
         if: github.ref == 'refs/heads/master'
