@@ -33,6 +33,24 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
+      - name: delete previous tag/pre-release
+        if: github.ref == 'refs/heads/master'
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: "latest"
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: delete previous tag release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: ${{ env.RELEASE_TAG }}
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: post pre-release
         uses: ncipollo/release-action@v1.11.1
         if: github.ref == 'refs/heads/master'
@@ -176,9 +194,11 @@ jobs:
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           artifactErrorsFailBuild: true
-          tag: "latest"
+          allowUpdates: true
+          replacesArtifacts: true
           prerelease: true
           draft: false
+          tag: "latest"
           commit: ${{ github.sha }}
           artifacts: |
               ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z
@@ -189,6 +209,8 @@ jobs:
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           artifactErrorsFailBuild: true
+          allowUpdates: true
+          replacesArtifacts: true
           prerelease: false
           draft: false
           commit: ${{ github.sha }}
