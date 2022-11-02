@@ -8,12 +8,14 @@ on:
       - 'master'
     paths-ignore:
       - '**.MD'
-
+      - '**.gitkeep'
+      - '**.gitignore'
   pull_request:
     types: [opened, synchronize]
+  release:
+    types: [published, released]
 
 jobs:
-
   clean_release:
     runs-on: ubuntu-latest
     steps:
@@ -181,11 +183,11 @@ jobs:
 
       - name: list repo
         run: |
-            ls -R
+           ls -R
 
       - name: repack
         run: |
-            7z a -t7z ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z build/${{ matrix.executable_name }}
+           7z a -t7z ${{ github.event.repository.name }}-${{ matrix.platform_name }}.7z build/${{ matrix.executable_name }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
