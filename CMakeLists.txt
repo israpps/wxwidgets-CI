@@ -108,6 +108,10 @@ endif()
 # add custom dependencies directory
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
 
+get_target_property(target_options wxwidgets-CI COMPILE_OPTIONS)
+list(REMOVE_ITEM target_options "-mwindows")
+set_property(TARGET wxwidgets-CI PROPERTY COMPILE_OPTIONS ${target_options})
+
 # a better way to load dependencies
 include(CPM)
 
