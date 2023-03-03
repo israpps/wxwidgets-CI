@@ -108,10 +108,6 @@ endif()
 # add custom dependencies directory
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
 
-get_target_property(target_options wxwidgets-CI COMPILE_OPTIONS)
-list(REMOVE_ITEM target_options "-mwindows")
-set_property(TARGET wxwidgets-CI PROPERTY COMPILE_OPTIONS ${target_options})
-
 # a better way to load dependencies
 include(CPM)
 
@@ -128,3 +124,4 @@ main.cpp
 )
 # target_link_libraries(demo PRIVATE wx-widgets-test-compiler-options)
 target_link_libraries(wxwidgets-CI PRIVATE wx::net wx::core wx::base)
+remove_flag_from_file(wxwidgets-CI wxwidgets-CI -mwindows)
