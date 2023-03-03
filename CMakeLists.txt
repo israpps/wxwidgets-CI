@@ -124,3 +124,4 @@ main.cpp
 )
 # target_link_libraries(demo PRIVATE wx-widgets-test-compiler-options)
 target_link_libraries(wxwidgets-CI PRIVATE wx::net wx::core wx::base)
+remove_flag_from_file(wxwidgets-CI wxwidgets-CI -mwindows)
